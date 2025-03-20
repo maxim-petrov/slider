@@ -127,7 +127,7 @@
 }
 
 .token-group:hover {
-  background-color: #f0f7ff;
+  background-color: #fff;
 }
 
 .token-group label {
@@ -135,6 +135,7 @@
   font-size: 0.9rem;
   color: #444;
   margin-right: 0.5rem;
+  text-align: left;
 }
 
 .token-group select,
@@ -151,7 +152,7 @@
 }
 
 .token-custom-value {
-  width: 150px;
+  width: 200px;
   font-family: monospace;
 }
 
@@ -244,7 +245,7 @@
 }
 
 .spring-token-group input[type="number"] {
-  width: 100px;
+  width: 200px;
 }
 
 /* Responsive adjustments */
