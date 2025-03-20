@@ -7,7 +7,8 @@ import {
   SLIDER_ANIMATION,
 } from './animation.js';
 import '../index.css';
-import './Slider.css';
+import './slider.scss';
+import './animation.scss';
 
 // Длительность анимаций (в секундах)
 const Duration = {
