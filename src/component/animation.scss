@@ -1,38 +1,42 @@
+/* Import tokens */
+@import '../tokenUtils.scss';
+
 /* Переход оси */
 .slider-axis-923-11-0-8:before {
-  transition: background-color 0.2s linear;
+  transition: background-color $LOCAL_DURATION_M $LOCAL_MOTION_LINEAR;
 }
 
 /* Переход заполнения оси */
 .slider-axisFill-f1d-11-0-8 {
-  transition: 0.2s;
+  transition: $LOCAL_DURATION_M;
 }
 
 /* Переход счетчика */
 .slider-counter-a01-11-0-8 {
-  transition: right 0.1s;
+  transition: right $LOCAL_DURATION_S;
 }
 
 /* Переход внутренней части ползунка */
 .slider-thumb-2b5-11-0-8 .slider-thumbInner-c38-11-0-8 {
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow $LOCAL_DURATION_L $LOCAL_MOTION_EASE;
 }
 
 /* Переход точки внутренней части ползунка */
 .slider-thumb-2b5-11-0-8 .slider-thumbInner-c38-11-0-8 .slider-thumbInnerDot {
-  transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-    width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: 
+    height $LOCAL_DURATION_L $LOCAL_MOTION_EASE_OUT,
+    width $LOCAL_DURATION_L $LOCAL_MOTION_EASE_OUT;
 }
 
 /* Переходы при перетаскивании ползунка */
 .slider-thumb-2b5-11-0-8.slider-dragging .slider-thumbInner-c38-11-0-8 {
-  transition-duration: 0.25s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: $LOCAL_DURATION_M;
+  transition-timing-function: $LOCAL_MOTION_EASE_OUT;
 }
 
 .slider-dragging .slider-thumb-2b5-11-0-8 .slider-thumbInner-c38-11-0-8 {
-  transition-duration: 0.25s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: $LOCAL_DURATION_M;
+  transition-timing-function: $LOCAL_MOTION_EASE_OUT;
 }
 
 /* Отключить переход в активном состоянии */

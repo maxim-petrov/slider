@@ -1,0 +1,27 @@
+// Определяем CSS переменные для токенов
+:root {
+  --local-duration-xs: 50ms;
+  --local-duration-s: 100ms;
+  --local-duration-m: 200ms;
+  --local-duration-l: 300ms;
+  --local-duration-xl: 500ms;
+
+  --local-motion-linear: cubic-bezier(0, 0, 1, 1);
+  --local-motion-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --local-motion-ease-out: cubic-bezier(.165, .84, .44, 1);
+  --local-motion-ease-in-out: cubic-bezier(.455, .03, .515, .955);
+  --local-motion-spring: cubic-bezier(0.32, 1.72, 0, 1);
+}
+
+// SCSS переменные для удобного использования
+$LOCAL_DURATION_XS: var(--local-duration-xs);
+$LOCAL_DURATION_S: var(--local-duration-s);
+$LOCAL_DURATION_M: var(--local-duration-m);
+$LOCAL_DURATION_L: var(--local-duration-l);
+$LOCAL_DURATION_XL: var(--local-duration-xl);
+
+$LOCAL_MOTION_LINEAR: var(--local-motion-linear);
+$LOCAL_MOTION_EASE: var(--local-motion-ease);
+$LOCAL_MOTION_EASE_OUT: var(--local-motion-ease-out);
+$LOCAL_MOTION_EASE_IN_OUT: var(--local-motion-ease-in-out);
+$LOCAL_MOTION_SPRING: var(--local-motion-spring); 

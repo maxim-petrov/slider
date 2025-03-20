@@ -9,6 +9,7 @@ import {
 import '../index.css';
 import './slider.scss';
 import './animation.scss';
+import tokens from './tokenUtils';
 
 // Длительность анимаций (в секундах)
 const Duration = {
@@ -65,6 +66,7 @@ const Slider = ({
   steps = [0, 25, 50, 75, 100],
   withInput = true,
   active = false,
+  customTokens = null,
   onChange,
 }) => {
   const [value, setValue] = useState(defaultValue);
@@ -76,6 +78,41 @@ const Slider = ({
 
   // Рассчитываем процент для отображения ползунка и заполнения оси
   const percentage = ((value - min) / (max - min)) * 100;
+
+  // Используем пользовательские токены, если они предоставлены
+  const getAnimationTokens = () => {
+    if (customTokens) {
+      return {
+        duration: customTokens.duration,
+        motion: customTokens.motion
+      };
+    } else {
+      return {
+        duration: tokens.LOCAL_DURATION_M,
+        motion: tokens.LOCAL_MOTION_EASE_OUT
+      };
+    }
+  };
+  
+  const animationTokens = getAnimationTokens();
+  
+  // Use animation tokens in getSliderTransitionStyle
+  const getCustomSliderTransitionStyle = (isDragging, isAnimating) => {
+    if (isDragging && !isAnimating) {
+      return 'none';
+    }
+    
+    // Используем все токены при наличии пользовательских настроек
+    if (customTokens && isAnimating) {
+      return `left ${customTokens.LOCAL_DURATION_M} ${customTokens.LOCAL_MOTION_EASE_OUT}, 
+              right ${customTokens.LOCAL_DURATION_M} ${customTokens.LOCAL_MOTION_EASE_OUT}`;
+    }
+    
+    return isAnimating
+      ? `left ${tokens.LOCAL_DURATION_M} ${tokens.LOCAL_MOTION_EASE_OUT}, 
+         right ${tokens.LOCAL_DURATION_M} ${tokens.LOCAL_MOTION_EASE_OUT}`
+      : 'none';
+  };
 
   // Обработчик изменения значения в поле ввода
   const handleInputChange = (e) => {
@@ -299,6 +336,11 @@ const Slider = ({
     document.body.style.userSelect = 'none';
   };
 
+  // Update usage of getSliderTransitionStyle to getCustomSliderTransitionStyle
+  const axisStyles = {
+    transition: getCustomSliderTransitionStyle(isDragging, isAnimating),
+  };
+
   // Вариант с текстовым полем ввода
   const renderWithInput = () => (
     <div className="_Gq5_ ql7Up" data-e2e-id="slider-default">
@@ -356,7 +398,7 @@ const Slider = ({
                   className="slider-axisFill-f1d-11-0-8"
                   style={{
                     right: `${100 - percentage}%`,
-                    transition: getSliderTransitionStyle(
+                    transition: getCustomSliderTransitionStyle(
                       isDragging,
                       isAnimating
                     ),
@@ -371,7 +413,7 @@ const Slider = ({
                 data-e2e-id="slider-slider-thumb"
                 style={{
                   left: `${percentage}%`,
-                  transition: getSliderTransitionStyle(isDragging, isAnimating),
+                  transition: getCustomSliderTransitionStyle(isDragging, isAnimating),
                   cursor: isDragging ? 'grabbing' : 'grab',
                 }}
                 onMouseDown={handleDragStart}
@@ -426,7 +468,7 @@ const Slider = ({
                 className="slider-axisFill-f1d-11-0-8"
                 style={{
                   right: `${100 - percentage}%`,
-                  transition: getSliderTransitionStyle(isDragging, isAnimating),
+                  transition: getCustomSliderTransitionStyle(isDragging, isAnimating),
                 }}
               />
             </span>
@@ -438,7 +480,7 @@ const Slider = ({
               data-e2e-id="slider-thumb"
               style={{
                 left: `${percentage}%`,
-                transition: getSliderTransitionStyle(isDragging, isAnimating),
+                transition: getCustomSliderTransitionStyle(isDragging, isAnimating),
                 cursor: isDragging ? 'grabbing' : 'grab',
               }}
               onMouseDown={handleDragStart}

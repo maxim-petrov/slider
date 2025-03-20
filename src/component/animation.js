@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import tokens from './tokenUtils';
 
 
 export const useSliderAnimation = () => {
@@ -8,7 +9,7 @@ export const useSliderAnimation = () => {
     if (isAnimating) {
       const timer = setTimeout(() => {
         setIsAnimating(false);
-      }, 400);
+      }, parseInt(tokens.LOCAL_DURATION_XL));
 
       return () => clearTimeout(timer);
     }
@@ -27,7 +28,7 @@ export const getSliderTransitionStyle = (isDragging, isAnimating) => {
     return 'none';
   }
   return isAnimating
-    ? 'left 0.35s cubic-bezier(0.4, 0, 0.2, 1), right 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
+    ? `left ${tokens.LOCAL_DURATION_L} ${tokens.LOCAL_MOTION_EASE_OUT}, right ${tokens.LOCAL_DURATION_L} ${tokens.LOCAL_MOTION_EASE_OUT}`
     : 'none';
 };
 
@@ -40,7 +41,7 @@ export const getInputDraggingStyle = (isDragging) => {
 };
 
 export const SLIDER_ANIMATION = {
-  DURATION_MS: 400,
-  TRANSITION_DURATION: '0.35s',
-  EASING: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  DURATION_MS: parseInt(tokens.LOCAL_DURATION_XL),
+  TRANSITION_DURATION: tokens.LOCAL_DURATION_L,
+  EASING: tokens.LOCAL_MOTION_EASE_OUT,
 };
