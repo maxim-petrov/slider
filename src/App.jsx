@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg';
 import './App.css';
 import Slider from './component/Slider';
 import rootTokens from './tokens.json';
+import componentTokens from './component/tokens.json';
 
 // Simple error boundary component
 function ErrorBoundary({ children }) {
@@ -36,21 +37,39 @@ function ErrorBoundary({ children }) {
 }
 
 function App() {
-  // Инициализируем состояние для всех токенов
-  const [tokenValues, setTokenValues] = useState({
-    // Duration tokens
-    LOCAL_DURATION_XS: '50ms',
-    LOCAL_DURATION_S: '100ms',
-    LOCAL_DURATION_M: '200ms',
-    LOCAL_DURATION_L: '300ms',
-    LOCAL_DURATION_XL: '500ms',
-    
-    // Motion tokens
-    LOCAL_MOTION_LINEAR: 'cubic-bezier(0, 0, 1, 1)',
-    LOCAL_MOTION_EASE: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
-    LOCAL_MOTION_EASE_OUT: 'cubic-bezier(.165, .84, .44, 1)',
-    LOCAL_MOTION_EASE_IN_OUT: 'cubic-bezier(.455, .03, .515, .955)',
-    LOCAL_MOTION_SPRING: 'cubic-bezier(0.32, 1.72, 0, 1)'
+  // Загружаем токены динамически из component/tokens.json
+  const [tokenValues, setTokenValues] = useState(() => {
+    // Преобразуем компонентные токены в начальное состояние
+    const initialTokens = {};
+    Object.entries(componentTokens).forEach(([key, value]) => {
+      // Если значение ссылается на функцию tokens, получаем исходное значение
+      if (typeof value === 'string' && value.startsWith('tokens.')) {
+        // Например, из tokens.duration('100') извлекаем '100'
+        const match = value.match(/tokens\.\w+\('([^']+)'\)/);
+        if (match && match[1]) {
+          const tokenKey = match[1];
+          if (value.includes('duration')) {
+            initialTokens[key] = rootTokens.duration[tokenKey] || value;
+          } else if (value.includes('motion')) {
+            initialTokens[key] = rootTokens.motion[tokenKey] || value;
+          } else {
+            initialTokens[key] = value;
+          }
+        } else {
+          initialTokens[key] = value;
+        }
+      } else {
+        // Для прямых значений (например, для spring токенов)
+        // Проверяем, является ли это spring токеном (STIFFNESS, DAMPING, MASS)
+        if (key.includes('SPRING_STIFFNESS') || key.includes('SPRING_DAMPING') || key.includes('SPRING_MASS')) {
+          // Преобразуем строковые значения в числа для spring токенов
+          initialTokens[key] = parseFloat(value);
+        } else {
+          initialTokens[key] = value;
+        }
+      }
+    });
+    return initialTokens;
   });
 
   // Дополнительные варианты длительности для тестирования долгих анимаций
@@ -98,11 +117,56 @@ function App() {
 
   // Обработчик изменения значения токена
   const handleTokenChange = (tokenName) => (e) => {
+    let newValue = e.target.value;
+    
+    // Для spring токенов преобразуем значение в число
+    if (tokenName.includes('SPRING_STIFFNESS') || 
+        tokenName.includes('SPRING_DAMPING') || 
+        tokenName.includes('SPRING_MASS')) {
+      newValue = parseFloat(newValue);
+      
+      // Проверяем на NaN и устанавливаем значение по умолчанию
+      if (isNaN(newValue)) {
+        if (tokenName.includes('SPRING_STIFFNESS')) {
+          newValue = 200; // Default stiffness
+        } else if (tokenName.includes('SPRING_DAMPING')) {
+          newValue = 18; // Default damping
+        } else if (tokenName.includes('SPRING_MASS')) {
+          newValue = 1; // Default mass
+        }
+      }
+    }
+    
     setTokenValues(prev => ({
       ...prev,
-      [tokenName]: e.target.value
+      [tokenName]: newValue
     }));
   };
+
+  // Группируем токены по типам
+  const groupedTokens = Object.entries(tokenValues).reduce((acc, [key, value]) => {
+    if (key.includes('DURATION')) {
+      acc.duration.push([key, value]);
+    } else if (key.includes('MOTION')) {
+      acc.motion.push([key, value]);
+    } else if (key.includes('SPRING')) {
+      // Группируем spring токены по подтипам (STIFFNESS, DAMPING, MASS)
+      if (key.includes('STIFFNESS')) {
+        acc.springStiffness.push([key, value]);
+      } else if (key.includes('DAMPING')) {
+        acc.springDamping.push([key, value]);
+      } else if (key.includes('MASS')) {
+        acc.springMass.push([key, value]);
+      }
+    }
+    return acc;
+  }, { 
+    duration: [], 
+    motion: [], 
+    springStiffness: [],
+    springDamping: [],
+    springMass: []
+  });
 
   return (
     <>
@@ -116,81 +180,152 @@ function App() {
         <div className="tokens-section">
           <h4>Токены длительности</h4>
           
-          {Object.entries(tokenValues)
-            .filter(([key]) => key.startsWith('LOCAL_DURATION'))
-            .map(([tokenName, tokenValue]) => (
-              <div className="token-group" key={tokenName}>
-                <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
-                <select 
-                  id={`token-${tokenName}`}
-                  value={tokenValue}
-                  onChange={handleTokenChange(tokenName)}
-                >
-                  <optgroup label="Из tokens.json">
-                    {availableDurations.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </optgroup>
-                  <optgroup label="Кастомные">
-                    <option value="10ms">Очень быстро (10ms)</option>
-                    <option value="25ms">Ультра-быстро (25ms)</option>
-                    <option value="750ms">Очень медленно (750ms)</option>
-                    <option value="1000ms">Максимальная длительность (1000ms)</option>
-                  </optgroup>
-                </select>
-                
-                <input
-                  type="text"
-                  className="token-custom-value"
-                  value={tokenValue}
-                  onChange={handleTokenChange(tokenName)}
-                  placeholder="Введите значение"
-                />
-              </div>
-            ))}
+          {groupedTokens.duration.map(([tokenName, tokenValue]) => (
+            <div className="token-group" key={tokenName}>
+              <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
+              <select 
+                id={`token-${tokenName}`}
+                value={tokenValue}
+                onChange={handleTokenChange(tokenName)}
+              >
+                <optgroup label="Из tokens.json">
+                  {availableDurations.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="Кастомные">
+                  <option value="10ms">Очень быстро (10ms)</option>
+                  <option value="25ms">Ультра-быстро (25ms)</option>
+                  <option value="750ms">Очень медленно (750ms)</option>
+                  <option value="1000ms">Максимальная длительность (1000ms)</option>
+                </optgroup>
+              </select>
+              
+              <input
+                type="text"
+                className="token-custom-value"
+                value={tokenValue}
+                onChange={handleTokenChange(tokenName)}
+                placeholder="Введите значение"
+              />
+            </div>
+          ))}
         </div>
         
         <div className="tokens-section">
           <h4>Токены движения</h4>
           
-          {Object.entries(tokenValues)
-            .filter(([key]) => key.startsWith('LOCAL_MOTION'))
-            .map(([tokenName, tokenValue]) => (
-              <div className="token-group" key={tokenName}>
-                <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
-                <select 
-                  id={`token-${tokenName}`}
-                  value={tokenValue}
-                  onChange={handleTokenChange(tokenName)}
-                >
-                  <optgroup label="Из tokens.json">
-                    {availableMotions.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </optgroup>
-                  <optgroup label="Кастомные">
-                    <option value="ease">Ease</option>
-                    <option value="ease-in">Ease In</option>
-                    <option value="ease-out">Ease Out</option>
-                    <option value="ease-in-out">Ease In Out</option>
-                    <option value="cubic-bezier(0.68, -0.55, 0.27, 1.55)">Bounce</option>
-                  </optgroup>
-                </select>
-                
-                <input
-                  type="text"
-                  className="token-custom-value"
-                  value={tokenValue}
-                  onChange={handleTokenChange(tokenName)}
-                  placeholder="Введите значение"
-                />
-              </div>
-            ))}
+          {groupedTokens.motion.map(([tokenName, tokenValue]) => (
+            <div className="token-group" key={tokenName}>
+              <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
+              <select 
+                id={`token-${tokenName}`}
+                value={tokenValue}
+                onChange={handleTokenChange(tokenName)}
+              >
+                <optgroup label="Из tokens.json">
+                  {availableMotions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="Кастомные">
+                  <option value="ease">Ease</option>
+                  <option value="ease-in">Ease In</option>
+                  <option value="ease-out">Ease Out</option>
+                  <option value="ease-in-out">Ease In Out</option>
+                  <option value="cubic-bezier(0.68, -0.55, 0.27, 1.55)">Bounce</option>
+                </optgroup>
+              </select>
+              
+              <input
+                type="text"
+                className="token-custom-value"
+                value={tokenValue}
+                onChange={handleTokenChange(tokenName)}
+                placeholder="Введите значение"
+              />
+            </div>
+          ))}
         </div>
+        
+        {/* Добавляем секцию для Spring токенов */}
+        {(groupedTokens.springStiffness.length > 0 || 
+          groupedTokens.springDamping.length > 0 || 
+          groupedTokens.springMass.length > 0) && (
+          <div className="tokens-section">
+            <h4>Токены Spring анимации</h4>
+            
+            {/* Stiffness tokens */}
+            {groupedTokens.springStiffness.length > 0 && (
+              <div className="spring-token-group">
+                <h5>Жесткость (Stiffness)</h5>
+                {groupedTokens.springStiffness.map(([tokenName, tokenValue]) => (
+                  <div className="token-group" key={tokenName}>
+                    <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
+                    <input
+                      type="number"
+                      id={`token-${tokenName}`}
+                      className="token-custom-value"
+                      value={tokenValue}
+                      onChange={handleTokenChange(tokenName)}
+                      min="1"
+                      max="1000"
+                      step="10"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {/* Damping tokens */}
+            {groupedTokens.springDamping.length > 0 && (
+              <div className="spring-token-group">
+                <h5>Затухание (Damping)</h5>
+                {groupedTokens.springDamping.map(([tokenName, tokenValue]) => (
+                  <div className="token-group" key={tokenName}>
+                    <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
+                    <input
+                      type="number"
+                      id={`token-${tokenName}`}
+                      className="token-custom-value"
+                      value={tokenValue}
+                      onChange={handleTokenChange(tokenName)}
+                      min="0"
+                      max="100"
+                      step="1"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {/* Mass tokens */}
+            {groupedTokens.springMass.length > 0 && (
+              <div className="spring-token-group">
+                <h5>Масса (Mass)</h5>
+                {groupedTokens.springMass.map(([tokenName, tokenValue]) => (
+                  <div className="token-group" key={tokenName}>
+                    <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
+                    <input
+                      type="number"
+                      id={`token-${tokenName}`}
+                      className="token-custom-value"
+                      value={tokenValue}
+                      onChange={handleTokenChange(tokenName)}
+                      min="0.1"
+                      max="10"
+                      step="0.1"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </>
   );

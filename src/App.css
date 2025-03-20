@@ -74,11 +74,14 @@
 }
 
 .tokens-configurator {
-  margin: 20px 0;
-  padding: 20px;
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  background-color: #f8f9fa;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: #f9f9f9;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .tokens-configurator h3 {
@@ -96,54 +99,60 @@
 }
 
 .tokens-section {
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
+}
+
+.tokens-section h4 {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.tokens-section h5 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-size: 0.9rem;
 }
 
 .token-group {
-  margin-bottom: 12px;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.token-group:hover {
+  background-color: #f0f7ff;
 }
 
 .token-group label {
-  width: 180px;
-  font-weight: 500;
-  margin-right: 10px;
-  font-family: monospace;
+  width: 250px;
+  font-size: 0.9rem;
+  color: #444;
+  margin-right: 0.5rem;
+}
+
+.token-group select,
+.token-group input {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }
 
 .token-group select {
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  background-color: white;
-  cursor: pointer;
-  flex-grow: 1;
-  max-width: 300px;
-  margin-right: 10px;
+  width: 250px;
+  margin-right: 0.5rem;
 }
 
 .token-custom-value {
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 16px;
   width: 150px;
   font-family: monospace;
-}
-
-.token-group select:hover,
-.token-custom-value:hover {
-  border-color: #aaa;
-}
-
-.token-group select:focus,
-.token-custom-value:focus {
-  outline: none;
-  border-color: #666;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
 }
 
 .token-preview {
@@ -225,6 +234,20 @@
   margin: 2px 0;
 }
 
+/* Spring token specific styles */
+.spring-token-group {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: #f0f7ff;
+  border-left: 3px solid #4a90e2;
+}
+
+.spring-token-group input[type="number"] {
+  width: 100px;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .token-group {
     flex-direction: column;
@@ -232,16 +255,13 @@
   }
   
   .token-group label {
-    width: 100%;
-    margin-bottom: 6px;
+    margin-bottom: 0.5rem;
   }
   
   .token-group select,
   .token-custom-value {
     width: 100%;
-    max-width: 100%;
-    margin-bottom: 6px;
-    margin-right: 0;
+    margin-bottom: 0.5rem;
   }
   
   .preview-boxes {
