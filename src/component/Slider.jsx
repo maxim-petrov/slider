@@ -11,63 +11,7 @@ import './slider.scss';
 import './animation.scss';
 import tokens from './tokenUtils';
 
-// Длительность анимаций (в секундах), использующие локальные токены
-const Duration = {
-  XXS: tokens.LOCAL_DURATION_XS,
-  XS: tokens.LOCAL_DURATION_S,
-  S: tokens.LOCAL_DURATION_S,
-  M: tokens.LOCAL_DURATION_M,
-  L: tokens.LOCAL_DURATION_L,
-  XL: tokens.LOCAL_DURATION_XL,
-  XXL: tokens.LOCAL_DURATION_XL, // Используем самое большое значение из токенов
-};
 
-// Кривые ускорения (easing)
-const Easing = {
-  // Базовые кривые
-  standard: tokens.LOCAL_MOTION_EASE,
-  entrance: tokens.LOCAL_MOTION_EASE_OUT,
-  exit: tokens.LOCAL_MOTION_EASE_IN_OUT,
-  spring: tokens.LOCAL_MOTION_SPRING,
-};
-
-// Параметры пружинной анимации (spring)
-const Spring = {
-  // Готовые конфигурации для различных сценариев
-  Strong: { 
-    stiffness: tokens.LOCAL_SPRING_STIFFNESS_STRONG, 
-    damping: tokens.LOCAL_SPRING_DAMPING_STRONG, 
-    mass: tokens.LOCAL_SPRING_MASS_STRONG 
-  }, // энергичный эффект для быстрых и отзывчивых элементов
-  Medium: { 
-    stiffness: tokens.LOCAL_SPRING_STIFFNESS_MEDIUM, 
-    damping: tokens.LOCAL_SPRING_DAMPING_MEDIUM, 
-    mass: tokens.LOCAL_SPRING_MASS_MEDIUM 
-  }, // сбалансированный эффект для большинства интерфейсных анимаций
-  Gentle: { 
-    stiffness: tokens.LOCAL_SPRING_STIFFNESS_GENTLE, 
-    damping: tokens.LOCAL_SPRING_DAMPING_GENTLE, 
-    mass: tokens.LOCAL_SPRING_MASS_GENTLE 
-  }, // мягкий, плавный эффект для больших элементов и эмоциональных анимаций
-};
-
-// Создает конфигурацию пружинной анимации для Framer Motion
-const createSpringConfig = ({
-  stiffness = Spring.Medium.stiffness,
-  damping = Spring.Medium.damping,
-  mass = Spring.Medium.mass,
-  delay = 0,
-  ...rest
-}) => ({
-  transition: {
-    type: 'spring',
-    stiffness,
-    damping,
-    mass,
-    delay,
-    ...rest,
-  },
-});
 
 const Slider = ({
   min = 0,
