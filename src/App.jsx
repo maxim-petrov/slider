@@ -53,11 +53,23 @@ function App() {
     LOCAL_MOTION_SPRING: 'cubic-bezier(0.32, 1.72, 0, 1)'
   });
 
+  // Дополнительные варианты длительности для тестирования долгих анимаций
+  const longDurations = [
+    { label: 'Очень долго (2000ms)', value: '2000ms' },
+    { label: 'Супер долго (5000ms)', value: '5000ms' },
+    { label: 'Ультра долго (10000ms)', value: '10000ms' },
+    { label: 'Экстремально долго (20000ms)', value: '20000ms' },
+    { label: 'Максимально долго (30000ms)', value: '30000ms' }
+  ];
+
   // Получаем все доступные значения из основного tokens.json
-  const availableDurations = Object.entries(rootTokens.duration).map(([key, value]) => ({
-    label: `${key} (${value})`,
-    value: value
-  }));
+  const availableDurations = [
+    ...Object.entries(rootTokens.duration).map(([key, value]) => ({
+      label: `${key} (${value})`,
+      value: value
+    })),
+    ...longDurations
+  ];
 
   const availableMotions = Object.entries(rootTokens.motion).map(([key, value]) => ({
     label: `${key} (${value})`,
@@ -69,6 +81,18 @@ function App() {
     Object.entries(tokenValues).forEach(([key, value]) => {
       const cssVarName = `--${key.toLowerCase().replace(/_/g, '-')}`;
       document.documentElement.style.setProperty(cssVarName, value);
+      
+      // Также обновляем переменные в токенах для JS
+      try {
+        // Динамически импортируем tokenUtils для обновления значений на лету
+        import('./component/tokenUtils').then(module => {
+          if (module.default && typeof module.default.updateToken === 'function') {
+            module.default.updateToken(key, value);
+          }
+        });
+      } catch (error) {
+        console.error('Failed to update token in JS:', error);
+      }
     });
   }, [tokenValues]);
 

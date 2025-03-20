@@ -71,7 +71,9 @@ const Slider = ({
 }) => {
   const [value, setValue] = useState(defaultValue);
   const [isDragging, setIsDragging] = useState(false);
-  const [isAnimating, startAnimation, stopAnimation] = useSliderAnimation();
+  const [isAnimating, startAnimation, stopAnimation] = useSliderAnimation(
+    customTokens?.LOCAL_DURATION_M || null
+  );
   const [isFocused, setIsFocused] = useState(false);
   const sliderRef = useRef(null);
   const inputRef = useRef(null);
@@ -104,8 +106,11 @@ const Slider = ({
     
     // Используем все токены при наличии пользовательских настроек
     if (customTokens && isAnimating) {
-      return `left ${customTokens.LOCAL_DURATION_M} ${customTokens.LOCAL_MOTION_EASE_OUT}, 
-              right ${customTokens.LOCAL_DURATION_M} ${customTokens.LOCAL_MOTION_EASE_OUT}`;
+      // Используем самую медленную из анимаций для синхронизации движения
+      const longestDuration = customTokens.LOCAL_DURATION_M;
+      const motionType = customTokens.LOCAL_MOTION_EASE_OUT;
+      
+      return `left ${longestDuration} ${motionType}, right ${longestDuration} ${motionType}`;
     }
     
     return isAnimating
