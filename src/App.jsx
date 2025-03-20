@@ -106,6 +106,10 @@ function App() {
 
   return (
     <>
+      <ErrorBoundary>
+        <Slider customTokens={tokenValues} />
+      </ErrorBoundary>
+      
       <div className="tokens-configurator">
         <h3>Настройка токенов анимации</h3>
         
@@ -186,47 +190,6 @@ function App() {
                 />
               </div>
             ))}
-        </div>
-      </div>
-      
-      <ErrorBoundary>
-        <Slider customTokens={tokenValues} />
-      </ErrorBoundary>
-      
-      <div className="token-preview">
-        <h4>Предпросмотр анимации</h4>
-        <div className="preview-boxes">
-          {Object.entries(tokenValues)
-            .filter(([key]) => key.startsWith('LOCAL_DURATION'))
-            .map(([durationKey, durationValue]) => (
-              Object.entries(tokenValues)
-                .filter(([key]) => key.startsWith('LOCAL_MOTION'))
-                .map(([motionKey, motionValue]) => (
-                  <div key={`${durationKey}-${motionKey}`} className="preview-item">
-                    <div 
-                      className="preview-box" 
-                      style={{
-                        transition: `all ${durationValue} ${motionValue}`
-                      }}
-                    ></div>
-                    <div className="preview-label">
-                      <div>{durationKey}</div>
-                      <div>{motionKey}</div>
-                    </div>
-                  </div>
-                )).slice(0, 1)  // Ограничиваем количество примеров
-            ))
-          }
-        </div>
-        <p>Наведите курсор на блоки для просмотра анимации</p>
-        
-        <div className="token-values">
-          <p><strong>Текущие значения токенов:</strong></p>
-          {Object.entries(tokenValues).map(([key, value]) => (
-            <div key={key} className="token-value-item">
-              <code>{key}: {value}</code>
-            </div>
-          ))}
         </div>
       </div>
     </>
