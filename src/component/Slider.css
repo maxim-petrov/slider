@@ -97,7 +97,6 @@
 
 .slider-root-80f-11-0-8.slider-active-c30-11-0-8 .slider-axisFill-f1d-11-0-8 {
   background-color: var(--color_component_slider_track_active, #009e36);
-  transition: 0s;
 }
 
 .slider-root-80f-11-0-8.slider-withCounter-21e-11-0-8
@@ -173,7 +172,6 @@
   left: -5px;
   position: absolute;
   top: 0;
-  transition: background-color 0.2s linear;
   width: calc(100% + 10px);
 }
 
@@ -184,7 +182,6 @@
   left: -5px;
   position: absolute;
   top: 0;
-  transition: 0.2s;
 }
 
 .slider-counter-a01-11-0-8 {
@@ -197,7 +194,6 @@
   padding: 4px 8px;
   text-align: center;
   top: -23px;
-  transition: right 0.1s;
   white-space: nowrap;
 }
 
@@ -227,7 +223,6 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  transition: box-shadow 0.3s ease;
 }
 
 .slider-thumb-2b5-11-0-8 .slider-thumbInner-c38-11-0-8 .slider-thumbInnerDot {
@@ -239,8 +234,6 @@
   display: block;
   pointer-events: none;
   /* Улучшаем плавность анимации */
-  transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-    width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Стиль для состояния ховера внутреннего круга: 12x12px (как запрошено) */
@@ -374,8 +367,6 @@
       var(--color_component_slider_track_active, #009e36),
       #0000 85%
     );
-  transition-duration: 0.25s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .slider-dragging .slider-thumb-2b5-11-0-8 .slider-thumbInner-c38-11-0-8 {
@@ -385,8 +376,6 @@
       var(--color_component_slider_track_active, #009e36),
       #0000 85%
     );
-  transition-duration: 0.25s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Стиль для оси слайдера при перетаскивании */

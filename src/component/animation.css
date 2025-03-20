@@ -1,0 +1,43 @@
+/* Переходы, извлеченные из Slider.css */
+
+/* Переход оси */
+.slider-axis-923-11-0-8:before {
+  transition: background-color 0.2s linear;
+}
+
+/* Переход заполнения оси */
+.slider-axisFill-f1d-11-0-8 {
+  transition: 0.2s;
+}
+
+/* Переход счетчика */
+.slider-counter-a01-11-0-8 {
+  transition: right 0.1s;
+}
+
+/* Переход внутренней части ползунка */
+.slider-thumb-2b5-11-0-8 .slider-thumbInner-c38-11-0-8 {
+  transition: box-shadow 0.3s ease;
+}
+
+/* Переход точки внутренней части ползунка */
+.slider-thumb-2b5-11-0-8 .slider-thumbInner-c38-11-0-8 .slider-thumbInnerDot {
+  transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Переходы при перетаскивании ползунка */
+.slider-thumb-2b5-11-0-8.slider-dragging .slider-thumbInner-c38-11-0-8 {
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slider-dragging .slider-thumb-2b5-11-0-8 .slider-thumbInner-c38-11-0-8 {
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Отключить переход в активном состоянии */
+.slider-root-80f-11-0-8.slider-active-c30-11-0-8 .slider-axisFill-f1d-11-0-8 {
+  transition: 0s;
+} 
