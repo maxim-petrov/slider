@@ -1,9 +1,19 @@
 import { useState, useEffect } from 'react';
 import rootTokens from '../tokens.json';
-import componentTokens from './tokens/tokens.json';
-import tokenDescriptions from './tokens/tokenDescriptions';
 
-function SliderConfig({ onTokenChange, tokenValues: initialTokenValues }) {
+function TokenConfig({ 
+  onTokenChange, 
+  tokenValues: initialTokenValues, 
+  componentTokens, 
+  tokenDescriptions = {},
+  componentNames = {
+    'THUMB': 'Ползунок',
+    'AXIS': 'Ось слайдера',
+    'COUNTER': 'Счетчик',
+    'SLIDER': 'Общие настройки'
+  },
+  title = "Настройка токенов анимации"
+}) {
   const [tokenValues, setTokenValues] = useState(initialTokenValues);
 
   // Update the parent component when tokenValues change
@@ -55,7 +65,7 @@ function SliderConfig({ onTokenChange, tokenValues: initialTokenValues }) {
     animation: [] // Объединяем duration и motion в одну группу
   });
 
-  // Сортируем токены по компонентам (THUMB, AXIS, COUNTER, SLIDER)
+  // Сортируем токены по компонентам
   const sortTokens = (tokens) => {
     return [...tokens].sort((a, b) => {
       const compA = a[0].split('_')[0];
@@ -84,15 +94,9 @@ function SliderConfig({ onTokenChange, tokenValues: initialTokenValues }) {
   // Группируем токены по компонентам
   const animationByComponent = groupTokensByComponent(groupedTokens.animation);
 
-  // Функция для перевода названия компонента на русский
+  // Функция для перевода названия компонента
   const getComponentTranslation = (componentName) => {
-    const translations = {
-      'THUMB': 'Ползунок',
-      'AXIS': 'Ось слайдера',
-      'COUNTER': 'Счетчик',
-      'SLIDER': 'Общие настройки'
-    };
-    return translations[componentName] || componentName;
+    return componentNames[componentName] || componentName;
   };
 
   // Функция для сортировки токенов в правильном порядке
@@ -140,13 +144,14 @@ function SliderConfig({ onTokenChange, tokenValues: initialTokenValues }) {
 
   return (
     <div className="tokens-configurator">
-      <h3>Настройка токенов анимации</h3>
+      <h3>{title}</h3>
       
       <div className="tokens-section">
         <h4>Токены анимации</h4>
         
         {Object.entries(animationByComponent).map(([componentName, tokens]) => (
           <div key={componentName} className={`component-group component-group-${componentName}`}>
+            <h5>{getComponentTranslation(componentName)}</h5>
             {tokens.map(([tokenName, tokenValue]) => {
               const description = getTokenDescription(tokenName);
               if (description === null) return null; // Пропускаем скрытые токены
@@ -199,4 +204,4 @@ function SliderConfig({ onTokenChange, tokenValues: initialTokenValues }) {
   );
 }
 
-export default SliderConfig; 
+export default TokenConfig; 
