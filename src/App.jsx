@@ -223,7 +223,6 @@ function App() {
           
           {Object.entries(durationByComponent).map(([componentName, tokens]) => (
             <div key={componentName} className={`component-group component-group-${componentName}`}>
-              <h5>{getComponentTranslation(componentName)}</h5>
               {tokens.map(([tokenName, tokenValue]) => (
                 <div className="token-group" key={tokenName}>
                   <div className="token-description">
@@ -264,7 +263,6 @@ function App() {
           
           {Object.entries(motionByComponent).map(([componentName, tokens]) => (
             <div key={componentName} className={`component-group component-group-${componentName}`}>
-              <h5>{getComponentTranslation(componentName)}</h5>
               {tokens.map(([tokenName, tokenValue]) => (
                 <div className="token-group" key={tokenName}>
                   <div className="token-description">
@@ -310,7 +308,6 @@ function App() {
             {/* Stiffness tokens */}
             {groupedTokens.springStiffness.length > 0 && (
               <div className="spring-token-group">
-                <h5>Жесткость (Stiffness)</h5>
                 {groupedTokens.springStiffness.map(([tokenName, tokenValue]) => (
                   <div className="token-group" key={tokenName}>
                     <div className="token-description">
@@ -335,7 +332,6 @@ function App() {
             {/* Damping tokens */}
             {groupedTokens.springDamping.length > 0 && (
               <div className="spring-token-group">
-                <h5>Затухание (Damping)</h5>
                 {groupedTokens.springDamping.map(([tokenName, tokenValue]) => (
                   <div className="token-group" key={tokenName}>
                     <div className="token-description">
@@ -360,7 +356,6 @@ function App() {
             {/* Mass tokens */}
             {groupedTokens.springMass.length > 0 && (
               <div className="spring-token-group">
-                <h5>Масса (Mass)</h5>
                 {groupedTokens.springMass.map(([tokenName, tokenValue]) => (
                   <div className="token-group" key={tokenName}>
                     <div className="token-description">
