@@ -50,7 +50,7 @@ function App() {
           const tokenKey = match[1];
           if (value.includes('duration')) {
             initialTokens[key] = rootTokens.duration[tokenKey] || value;
-          } else if (value.includes('motion')) {
+          } else if (value.includes('motion') || value.includes('easing')) {
             initialTokens[key] = rootTokens.motion[tokenKey] || value;
           } else {
             initialTokens[key] = value;
@@ -147,7 +147,7 @@ function App() {
   const groupedTokens = Object.entries(tokenValues).reduce((acc, [key, value]) => {
     if (key.includes('DURATION')) {
       acc.duration.push([key, value]);
-    } else if (key.includes('MOTION')) {
+    } else if (key.includes('MOTION') || key.includes('EASING')) {
       acc.motion.push([key, value]);
     } else if (key.includes('SPRING')) {
       // Группируем spring токены по подтипам (STIFFNESS, DAMPING, MASS)
@@ -215,7 +215,7 @@ function App() {
         </div>
         
         <div className="tokens-section">
-          <h4>Токены движения</h4>
+          <h4>Токены движения/плавности</h4>
           
           {groupedTokens.motion.map(([tokenName, tokenValue]) => (
             <div className="token-group" key={tokenName}>
