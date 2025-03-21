@@ -25,32 +25,17 @@ const parseTokenValue = (value) => {
 // Create a simplified version with hardcoded values for now
 // to ensure the app renders
 const processedTokens = {
-  // Durations
   LOCAL_DURATION_XS: '50ms',
   LOCAL_DURATION_S: '100ms',
   LOCAL_DURATION_M: '200ms',
   LOCAL_DURATION_L: '300ms',
   LOCAL_DURATION_XL: '500ms',
   
-  // Motion
   LOCAL_MOTION_LINEAR: 'cubic-bezier(0, 0, 1, 1)',
   LOCAL_MOTION_EASE: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
   LOCAL_MOTION_EASE_OUT: 'cubic-bezier(.165, .84, .44, 1)',
   LOCAL_MOTION_EASE_IN_OUT: 'cubic-bezier(.455, .03, .515, .955)',
   LOCAL_MOTION_SPRING: 'cubic-bezier(0.32, 1.72, 0, 1)',
-  
-  // Spring Animation
-  LOCAL_SPRING_STIFFNESS_STRONG: 290,
-  LOCAL_SPRING_DAMPING_STRONG: 22,
-  LOCAL_SPRING_MASS_STRONG: 1,
-  
-  LOCAL_SPRING_STIFFNESS_MEDIUM: 200,
-  LOCAL_SPRING_DAMPING_MEDIUM: 18, 
-  LOCAL_SPRING_MASS_MEDIUM: 1,
-  
-  LOCAL_SPRING_STIFFNESS_GENTLE: 120,
-  LOCAL_SPRING_DAMPING_GENTLE: 14,
-  LOCAL_SPRING_MASS_GENTLE: 1.2
 };
 
 // Метод для обновления токенов на лету
