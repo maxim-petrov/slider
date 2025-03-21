@@ -9,7 +9,7 @@ import {
 import '../index.css';
 import './styles/slider.scss';
 import './styles/animation.scss';
-import tokens from './tokenUtils';
+import tokens from './tokens/tokenUtils';
 
 
 

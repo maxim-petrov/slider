@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg';
 import './App.css';
 import Slider from './slider/Slider';
 import rootTokens from './tokens.json';
-import componentTokens from './slider/tokens.json';
+import componentTokens from './slider/tokens/tokens.json';
 
 // Simple error boundary slider
 function ErrorBoundary({ children }) {
@@ -104,7 +104,7 @@ function App() {
       // Также обновляем переменные в токенах для JS
       try {
         // Динамически импортируем tokenUtils для обновления значений на лету
-        import('./slider/tokenUtils').then(module => {
+        import('./slider/tokens/tokenUtils').then(module => {
           if (module.default && typeof module.default.updateToken === 'function') {
             module.default.updateToken(key, value);
           }
