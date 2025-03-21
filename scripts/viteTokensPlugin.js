@@ -18,7 +18,7 @@ export default function tokensPlugin() {
       const watcher = server.watcher;
       
       watcher.add([
-        path.resolve('src/component/tokens.json'),
+        path.resolve('src/slider/tokens.json'),
         path.resolve('src/tokens.json')
       ]);
       

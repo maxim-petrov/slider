@@ -3,9 +3,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Пути к файлам
-const COMPONENT_TOKENS_PATH = path.resolve('src/component/tokens.json');
+const COMPONENT_TOKENS_PATH = path.resolve('src/slider/tokens.json');
 const ROOT_TOKENS_PATH = path.resolve('src/tokens.json');
-const JS_UTILS_PATH = path.resolve('src/component/tokenUtils.js');
+const JS_UTILS_PATH = path.resolve('src/slider/tokenUtils.js');
 const SCSS_UTILS_PATH = path.resolve('src/tokenUtils.scss');
 
 // Функция для генерации файлов с токенами
@@ -15,7 +15,7 @@ export async function generateTokenFiles() {
     const rootTokens = JSON.parse(fs.readFileSync(ROOT_TOKENS_PATH, 'utf8'));
     const componentTokens = JSON.parse(fs.readFileSync(COMPONENT_TOKENS_PATH, 'utf8'));
     
-    // Обрабатываем токены из component/tokens.json
+    // Обрабатываем токены из slider/tokens.json
     const processedTokens = {};
     
     // Обрабатываем строки вида "tokens.duration('50')" и другие форматы токенов
