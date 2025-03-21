@@ -7,8 +7,8 @@ import {
   SLIDER_ANIMATION,
 } from './animation.js';
 import '../index.css';
-import './slider.scss';
-import './animation.scss';
+import './styles/slider.scss';
+import './styles/animation.scss';
 import tokens from './tokenUtils';
 
 
