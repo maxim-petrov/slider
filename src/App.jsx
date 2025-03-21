@@ -73,23 +73,11 @@ function App() {
     return initialTokens;
   });
 
-  // Дополнительные варианты длительности для тестирования долгих анимаций
-  const longDurations = [
-    { label: 'Очень долго (2000ms)', value: '2000ms' },
-    { label: 'Супер долго (5000ms)', value: '5000ms' },
-    { label: 'Ультра долго (10000ms)', value: '10000ms' },
-    { label: 'Экстремально долго (20000ms)', value: '20000ms' },
-    { label: 'Максимально долго (30000ms)', value: '30000ms' }
-  ];
-
   // Получаем все доступные значения из основного tokens.json
-  const availableDurations = [
-    ...Object.entries(rootTokens.duration).map(([key, value]) => ({
-      label: `${key} (${value})`,
-      value: value
-    })),
-    ...longDurations
-  ];
+  const availableDurations = Object.entries(rootTokens.duration).map(([key, value]) => ({
+    label: `${key} (${value})`,
+    value: value
+  }));
 
   const availableMotions = Object.entries(rootTokens.motion).map(([key, value]) => ({
     label: `${key} (${value})`,
@@ -255,12 +243,6 @@ function App() {
                           </option>
                         ))}
                       </optgroup>
-                      <optgroup label="Кастомные">
-                        <option value="10ms">Очень быстро (10ms)</option>
-                        <option value="25ms">Ультра-быстро (25ms)</option>
-                        <option value="750ms">Очень медленно (750ms)</option>
-                        <option value="1000ms">Максимальная длительность (1000ms)</option>
-                      </optgroup>
                     </select>
                     
                     <input
@@ -301,13 +283,6 @@ function App() {
                             {option.label}
                           </option>
                         ))}
-                      </optgroup>
-                      <optgroup label="Кастомные">
-                        <option value="ease">Ease</option>
-                        <option value="ease-in">Ease In</option>
-                        <option value="ease-out">Ease Out</option>
-                        <option value="ease-in-out">Ease In Out</option>
-                        <option value="cubic-bezier(0.68, -0.55, 0.27, 1.55)">Bounce</option>
                       </optgroup>
                     </select>
                     
