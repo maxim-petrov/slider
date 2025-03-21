@@ -28,7 +28,7 @@ const Slider = ({
   const [value, setValue] = useState(defaultValue);
   const [isDragging, setIsDragging] = useState(false);
   const [isAnimating, startAnimation, stopAnimation] = useSliderAnimation(
-    customTokens?.LOCAL_DURATION_M || null
+    customTokens?.SLIDER_ANIMATION_DURATION || null
   );
   const [isFocused, setIsFocused] = useState(false);
   const sliderRef = useRef(null);
@@ -46,8 +46,8 @@ const Slider = ({
       };
     } else {
       return {
-        duration: tokens.LOCAL_DURATION_M,
-        motion: tokens.LOCAL_MOTION_EASE_OUT
+        duration: tokens.SLIDER_TRANSITION_DURATION,
+        motion: tokens.SLIDER_TRANSITION_EASING
       };
     }
   };
@@ -63,15 +63,15 @@ const Slider = ({
     // Используем все токены при наличии пользовательских настроек
     if (customTokens && isAnimating) {
       // Используем самую медленную из анимаций для синхронизации движения
-      const longestDuration = customTokens.LOCAL_DURATION_M;
-      const motionType = customTokens.LOCAL_MOTION_EASE_OUT;
+      const longestDuration = customTokens.SLIDER_TRANSITION_DURATION || customTokens.duration;
+      const motionType = customTokens.SLIDER_TRANSITION_EASING || customTokens.motion;
       
       return `left ${longestDuration} ${motionType}, right ${longestDuration} ${motionType}`;
     }
     
     return isAnimating
-      ? `left ${tokens.LOCAL_DURATION_M} ${tokens.LOCAL_MOTION_EASE_OUT}, 
-         right ${tokens.LOCAL_DURATION_M} ${tokens.LOCAL_MOTION_EASE_OUT}`
+      ? `left ${tokens.SLIDER_TRANSITION_DURATION} ${tokens.SLIDER_TRANSITION_EASING}, 
+         right ${tokens.SLIDER_TRANSITION_DURATION} ${tokens.SLIDER_TRANSITION_EASING}`
       : 'none';
   };
 

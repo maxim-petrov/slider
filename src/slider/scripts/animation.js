@@ -21,7 +21,7 @@ export const useSliderAnimation = (customDuration = null) => {
       // иначе используем значение из токенов
       const animationDuration = customDuration 
         ? extractMs(customDuration)
-        : parseInt(tokens.LOCAL_DURATION_XL);
+        : parseInt(tokens.SLIDER_ANIMATION_DURATION);
       
       // Устанавливаем таймер, который ВСЕГДА больше длительности анимации
       // чтобы никогда не обрезать анимацию
@@ -50,7 +50,7 @@ export const getSliderTransitionStyle = (isDragging, isAnimating) => {
     return 'none';
   }
   return isAnimating
-    ? `left ${tokens.LOCAL_DURATION_L} ${tokens.LOCAL_MOTION_EASE_OUT}, right ${tokens.LOCAL_DURATION_L} ${tokens.LOCAL_MOTION_EASE_OUT}`
+    ? `left ${tokens.SLIDER_TRANSITION_DURATION} ${tokens.SLIDER_TRANSITION_EASING}, right ${tokens.SLIDER_TRANSITION_DURATION} ${tokens.SLIDER_TRANSITION_EASING}`
     : 'none';
 };
 
@@ -63,7 +63,7 @@ export const getInputDraggingStyle = (isDragging) => {
 };
 
 export const SLIDER_ANIMATION = {
-  DURATION_MS: parseInt(tokens.LOCAL_DURATION_XL),
-  TRANSITION_DURATION: tokens.LOCAL_DURATION_L,
-  EASING: tokens.LOCAL_MOTION_EASE_OUT,
+  DURATION_MS: parseInt(tokens.SLIDER_ANIMATION_DURATION),
+  TRANSITION_DURATION: tokens.SLIDER_TRANSITION_DURATION,
+  EASING: tokens.SLIDER_TRANSITION_EASING,
 };

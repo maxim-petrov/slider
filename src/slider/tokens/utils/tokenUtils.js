@@ -22,18 +22,32 @@ const parseTokenValue = (value) => {
   return value;
 };
 
+// Функция для получения значений из rootTokens
+const duration = (value) => rootTokens.duration[value] || `${value}ms`;
+const motion = (type) => rootTokens.motion[type] || 'cubic-bezier(0, 0, 1, 1)';
+
 // Processed tokens generated from component/tokens.json
 const processedTokens = {
-  "LOCAL_DURATION_XS": "50ms",
-  "LOCAL_DURATION_S": "100ms",
-  "LOCAL_DURATION_M": "200ms",
-  "LOCAL_DURATION_L": "300ms",
-  "LOCAL_DURATION_XL": "500ms",
-  "LOCAL_MOTION_LINEAR": "cubic-bezier(0, 0, 1, 1)",
-  "LOCAL_MOTION_EASE": "cubic-bezier(0.25, 0.1, 0.25, 1)",
-  "LOCAL_MOTION_EASE_OUT": "cubic-bezier(.165, .84, .44, 1)",
-  "LOCAL_MOTION_EASE_IN_OUT": "cubic-bezier(.455, .03, .515, .955)",
-  "LOCAL_MOTION_SPRING": "cubic-bezier(0.32, 1.72, 0, 1)"
+  "THUMB_TRANSITION_DURATION": duration('300'),
+  "THUMB_TRANSITION_EASING": motion('ease'),
+  "THUMB_HOVER_DURATION": duration('300'),
+  "THUMB_DRAG_DURATION": duration('200'),
+  "THUMB_DRAG_EASING": motion('easeOut'),
+  "THUMB_DOT_EXPAND_DURATION": duration('300'),
+  "THUMB_DOT_COLLAPSE_DURATION": duration('300'),
+  "THUMB_DOT_TRANSITION_EASING": motion('easeOut'),
+  
+  "AXIS_TRANSITION_DURATION": duration('200'),
+  "AXIS_TRANSITION_EASING": motion('linear'),
+  "AXIS_FILL_TRANSITION_DURATION": duration('200'),
+  "AXIS_FILL_ACTIVE_DURATION": duration('0'),
+  
+  "COUNTER_TRANSITION_DURATION": duration('100'),
+  "COUNTER_TRANSITION_EASING": motion('linear'),
+  
+  "SLIDER_ANIMATION_DURATION": duration('500'),
+  "SLIDER_TRANSITION_DURATION": duration('300'),
+  "SLIDER_TRANSITION_EASING": motion('easeOut')
 };
 
 // Метод для обновления токенов на лету
