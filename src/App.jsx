@@ -5,6 +5,7 @@ import './App.css';
 import Slider from './slider/Slider';
 import rootTokens from './tokens.json';
 import componentTokens from './slider/tokens/tokens.json';
+import tokenDescriptions from './slider/tokens/tokenDescriptions';
 
 // Simple error boundary slider
 function ErrorBoundary({ children }) {
@@ -143,7 +144,18 @@ function App() {
     }));
   };
 
-  // Группируем токены по типам
+  // Функция для получения описания токена или использования технического названия если описание отсутствует
+  const getTokenDescription = (tokenName) => {
+    return tokenDescriptions[tokenName] || tokenName;
+  };
+
+  // Функция для получения названия компонента из токена
+  const getComponentFromToken = (tokenName) => {
+    const parts = tokenName.split('_');
+    return parts[0];
+  };
+
+  // Группируем токены по типам и сортируем их по названию компонента
   const groupedTokens = Object.entries(tokenValues).reduce((acc, [key, value]) => {
     if (key.includes('DURATION')) {
       acc.duration.push([key, value]);
@@ -168,6 +180,47 @@ function App() {
     springMass: []
   });
 
+  // Сортируем токены по компонентам (THUMB, AXIS, COUNTER, SLIDER)
+  const sortTokens = (tokens) => {
+    return [...tokens].sort((a, b) => {
+      const compA = a[0].split('_')[0];
+      const compB = b[0].split('_')[0];
+      return compA.localeCompare(compB);
+    });
+  };
+
+  // Сортируем все группы токенов
+  Object.keys(groupedTokens).forEach(key => {
+    groupedTokens[key] = sortTokens(groupedTokens[key]);
+  });
+
+  // Функция для группировки токенов по компонентам
+  const groupTokensByComponent = (tokens) => {
+    return tokens.reduce((acc, token) => {
+      const componentName = getComponentFromToken(token[0]);
+      if (!acc[componentName]) {
+        acc[componentName] = [];
+      }
+      acc[componentName].push(token);
+      return acc;
+    }, {});
+  };
+
+  // Группируем токены по компонентам
+  const durationByComponent = groupTokensByComponent(groupedTokens.duration);
+  const motionByComponent = groupTokensByComponent(groupedTokens.motion);
+
+  // Функция для перевода названия компонента на русский
+  const getComponentTranslation = (componentName) => {
+    const translations = {
+      'THUMB': 'Ползунок',
+      'AXIS': 'Ось слайдера',
+      'COUNTER': 'Счетчик',
+      'SLIDER': 'Общие настройки'
+    };
+    return translations[componentName] || componentName;
+  };
+
   return (
     <>
       <ErrorBoundary>
@@ -180,36 +233,46 @@ function App() {
         <div className="tokens-section">
           <h4>Токены длительности</h4>
           
-          {groupedTokens.duration.map(([tokenName, tokenValue]) => (
-            <div className="token-group" key={tokenName}>
-              <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
-              <select 
-                id={`token-${tokenName}`}
-                value={tokenValue}
-                onChange={handleTokenChange(tokenName)}
-              >
-                <optgroup label="Из tokens.json">
-                  {availableDurations.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </optgroup>
-                <optgroup label="Кастомные">
-                  <option value="10ms">Очень быстро (10ms)</option>
-                  <option value="25ms">Ультра-быстро (25ms)</option>
-                  <option value="750ms">Очень медленно (750ms)</option>
-                  <option value="1000ms">Максимальная длительность (1000ms)</option>
-                </optgroup>
-              </select>
-              
-              <input
-                type="text"
-                className="token-custom-value"
-                value={tokenValue}
-                onChange={handleTokenChange(tokenName)}
-                placeholder="Введите значение"
-              />
+          {Object.entries(durationByComponent).map(([componentName, tokens]) => (
+            <div key={componentName} className={`component-group component-group-${componentName}`}>
+              <h5>{getComponentTranslation(componentName)}</h5>
+              {tokens.map(([tokenName, tokenValue]) => (
+                <div className="token-group" key={tokenName}>
+                  <div className="token-description">
+                    <label htmlFor={`token-${tokenName}`}>{getTokenDescription(tokenName)}</label>
+                    <span className="token-technical-name">{tokenName}</span>
+                  </div>
+                  <div className="token-controls">
+                    <select 
+                      id={`token-${tokenName}`}
+                      value={tokenValue}
+                      onChange={handleTokenChange(tokenName)}
+                    >
+                      <optgroup label="Из tokens.json">
+                        {availableDurations.map(option => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Кастомные">
+                        <option value="10ms">Очень быстро (10ms)</option>
+                        <option value="25ms">Ультра-быстро (25ms)</option>
+                        <option value="750ms">Очень медленно (750ms)</option>
+                        <option value="1000ms">Максимальная длительность (1000ms)</option>
+                      </optgroup>
+                    </select>
+                    
+                    <input
+                      type="text"
+                      className="token-custom-value"
+                      value={tokenValue}
+                      onChange={handleTokenChange(tokenName)}
+                      placeholder="Введите значение"
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -217,37 +280,47 @@ function App() {
         <div className="tokens-section">
           <h4>Токены движения/плавности</h4>
           
-          {groupedTokens.motion.map(([tokenName, tokenValue]) => (
-            <div className="token-group" key={tokenName}>
-              <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
-              <select 
-                id={`token-${tokenName}`}
-                value={tokenValue}
-                onChange={handleTokenChange(tokenName)}
-              >
-                <optgroup label="Из tokens.json">
-                  {availableMotions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </optgroup>
-                <optgroup label="Кастомные">
-                  <option value="ease">Ease</option>
-                  <option value="ease-in">Ease In</option>
-                  <option value="ease-out">Ease Out</option>
-                  <option value="ease-in-out">Ease In Out</option>
-                  <option value="cubic-bezier(0.68, -0.55, 0.27, 1.55)">Bounce</option>
-                </optgroup>
-              </select>
-              
-              <input
-                type="text"
-                className="token-custom-value"
-                value={tokenValue}
-                onChange={handleTokenChange(tokenName)}
-                placeholder="Введите значение"
-              />
+          {Object.entries(motionByComponent).map(([componentName, tokens]) => (
+            <div key={componentName} className={`component-group component-group-${componentName}`}>
+              <h5>{getComponentTranslation(componentName)}</h5>
+              {tokens.map(([tokenName, tokenValue]) => (
+                <div className="token-group" key={tokenName}>
+                  <div className="token-description">
+                    <label htmlFor={`token-${tokenName}`}>{getTokenDescription(tokenName)}</label>
+                    <span className="token-technical-name">{tokenName}</span>
+                  </div>
+                  <div className="token-controls">
+                    <select 
+                      id={`token-${tokenName}`}
+                      value={tokenValue}
+                      onChange={handleTokenChange(tokenName)}
+                    >
+                      <optgroup label="Из tokens.json">
+                        {availableMotions.map(option => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Кастомные">
+                        <option value="ease">Ease</option>
+                        <option value="ease-in">Ease In</option>
+                        <option value="ease-out">Ease Out</option>
+                        <option value="ease-in-out">Ease In Out</option>
+                        <option value="cubic-bezier(0.68, -0.55, 0.27, 1.55)">Bounce</option>
+                      </optgroup>
+                    </select>
+                    
+                    <input
+                      type="text"
+                      className="token-custom-value"
+                      value={tokenValue}
+                      onChange={handleTokenChange(tokenName)}
+                      placeholder="Введите значение"
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -265,7 +338,10 @@ function App() {
                 <h5>Жесткость (Stiffness)</h5>
                 {groupedTokens.springStiffness.map(([tokenName, tokenValue]) => (
                   <div className="token-group" key={tokenName}>
-                    <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
+                    <div className="token-description">
+                      <label htmlFor={`token-${tokenName}`}>{getTokenDescription(tokenName)}</label>
+                      <span className="token-technical-name">{tokenName}</span>
+                    </div>
                     <input
                       type="number"
                       id={`token-${tokenName}`}
@@ -287,7 +363,10 @@ function App() {
                 <h5>Затухание (Damping)</h5>
                 {groupedTokens.springDamping.map(([tokenName, tokenValue]) => (
                   <div className="token-group" key={tokenName}>
-                    <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
+                    <div className="token-description">
+                      <label htmlFor={`token-${tokenName}`}>{getTokenDescription(tokenName)}</label>
+                      <span className="token-technical-name">{tokenName}</span>
+                    </div>
                     <input
                       type="number"
                       id={`token-${tokenName}`}
@@ -309,7 +388,10 @@ function App() {
                 <h5>Масса (Mass)</h5>
                 {groupedTokens.springMass.map(([tokenName, tokenValue]) => (
                   <div className="token-group" key={tokenName}>
-                    <label htmlFor={`token-${tokenName}`}>{tokenName}: </label>
+                    <div className="token-description">
+                      <label htmlFor={`token-${tokenName}`}>{getTokenDescription(tokenName)}</label>
+                      <span className="token-technical-name">{tokenName}</span>
+                    </div>
                     <input
                       type="number"
                       id={`token-${tokenName}`}
