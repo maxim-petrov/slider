@@ -28,7 +28,8 @@ const Slider = ({
   const [value, setValue] = useState(defaultValue);
   const [isDragging, setIsDragging] = useState(false);
   const [isAnimating, startAnimation, stopAnimation] = useSliderAnimation(
-    customTokens?.SLIDER_ANIMATION_DURATION || null
+    customTokens?.SLIDER_ANIMATION_DURATION || null,
+    customTokens?.SLIDER_TRANSITION_DURATION || tokens.SLIDER_TRANSITION_DURATION
   );
   const [isFocused, setIsFocused] = useState(false);
   const sliderRef = useRef(null);
