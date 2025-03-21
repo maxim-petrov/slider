@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import Slider from './slider/Slider';
-import ErrorBoundary from './slider/ErrorBoundary';
 import SliderConfig from './slider/SliderConfig';
 import { initializeTokenValues } from './slider/utils/tokenInitializer';
 
@@ -36,9 +35,7 @@ function App() {
 
   return (
     <>
-      <ErrorBoundary>
-        <Slider customTokens={tokenValues} />
-      </ErrorBoundary>
+      <Slider customTokens={tokenValues} />
       <SliderConfig onTokenChange={handleTokenChange} tokenValues={tokenValues} />
     </>
   );

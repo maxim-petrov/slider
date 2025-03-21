@@ -25,25 +25,6 @@ function SliderConfig({ onTokenChange, tokenValues: initialTokenValues }) {
   // Обработчик изменения значения токена
   const handleTokenChange = (tokenName) => (e) => {
     let newValue = e.target.value;
-    
-    // Для spring токенов преобразуем значение в число
-    if (tokenName.includes('SPRING_STIFFNESS') || 
-        tokenName.includes('SPRING_DAMPING') || 
-        tokenName.includes('SPRING_MASS')) {
-      newValue = parseFloat(newValue);
-      
-      // Проверяем на NaN и устанавливаем значение по умолчанию
-      if (isNaN(newValue)) {
-        if (tokenName.includes('SPRING_STIFFNESS')) {
-          newValue = 200; // Default stiffness
-        } else if (tokenName.includes('SPRING_DAMPING')) {
-          newValue = 18; // Default damping
-        } else if (tokenName.includes('SPRING_MASS')) {
-          newValue = 1; // Default mass
-        }
-      }
-    }
-    
     setTokenValues(prev => ({
       ...prev,
       [tokenName]: newValue
@@ -68,22 +49,10 @@ function SliderConfig({ onTokenChange, tokenValues: initialTokenValues }) {
     if (key.includes('DURATION') || key.includes('MOTION') || key.includes('EASING')) {
       // Объединяем токены длительности и плавности в одну группу
       acc.animation.push([key, value]);
-    } else if (key.includes('SPRING')) {
-      // Группируем spring токены по подтипам (STIFFNESS, DAMPING, MASS)
-      if (key.includes('STIFFNESS')) {
-        acc.springStiffness.push([key, value]);
-      } else if (key.includes('DAMPING')) {
-        acc.springDamping.push([key, value]);
-      } else if (key.includes('MASS')) {
-        acc.springMass.push([key, value]);
-      }
     }
     return acc;
   }, { 
-    animation: [], // Объединяем duration и motion в одну группу
-    springStiffness: [],
-    springDamping: [],
-    springMass: []
+    animation: [] // Объединяем duration и motion в одну группу
   });
 
   // Сортируем токены по компонентам (THUMB, AXIS, COUNTER, SLIDER)
@@ -226,99 +195,6 @@ function SliderConfig({ onTokenChange, tokenValues: initialTokenValues }) {
           </div>
         ))}
       </div>
-      
-      {/* Добавляем секцию для Spring токенов */}
-      {(groupedTokens.springStiffness.length > 0 || 
-        groupedTokens.springDamping.length > 0 || 
-        groupedTokens.springMass.length > 0) && (
-        <div className="tokens-section">
-          <h4>Токены Spring анимации</h4>
-          
-          {/* Stiffness tokens */}
-          {groupedTokens.springStiffness.length > 0 && (
-            <div className="spring-token-group">
-              {groupedTokens.springStiffness.map(([tokenName, tokenValue]) => {
-                const description = getTokenDescription(tokenName);
-                if (description === null) return null; // Пропускаем скрытые токены
-                return (
-                  <div className="token-group" key={tokenName}>
-                    <div className="token-description">
-                      <label htmlFor={`token-${tokenName}`}>{description}</label>
-                      <span className="token-technical-name">{tokenName}</span>
-                    </div>
-                    <input
-                      type="number"
-                      id={`token-${tokenName}`}
-                      className="token-custom-value"
-                      value={tokenValue}
-                      onChange={handleTokenChange(tokenName)}
-                      min="1"
-                      max="1000"
-                      step="10"
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-          
-          {/* Damping tokens */}
-          {groupedTokens.springDamping.length > 0 && (
-            <div className="spring-token-group">
-              {groupedTokens.springDamping.map(([tokenName, tokenValue]) => {
-                const description = getTokenDescription(tokenName);
-                if (description === null) return null; // Пропускаем скрытые токены
-                return (
-                  <div className="token-group" key={tokenName}>
-                    <div className="token-description">
-                      <label htmlFor={`token-${tokenName}`}>{description}</label>
-                      <span className="token-technical-name">{tokenName}</span>
-                    </div>
-                    <input
-                      type="number"
-                      id={`token-${tokenName}`}
-                      className="token-custom-value"
-                      value={tokenValue}
-                      onChange={handleTokenChange(tokenName)}
-                      min="0"
-                      max="100"
-                      step="1"
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-          
-          {/* Mass tokens */}
-          {groupedTokens.springMass.length > 0 && (
-            <div className="spring-token-group">
-              {groupedTokens.springMass.map(([tokenName, tokenValue]) => {
-                const description = getTokenDescription(tokenName);
-                if (description === null) return null; // Пропускаем скрытые токены
-                return (
-                  <div className="token-group" key={tokenName}>
-                    <div className="token-description">
-                      <label htmlFor={`token-${tokenName}`}>{description}</label>
-                      <span className="token-technical-name">{tokenName}</span>
-                    </div>
-                    <input
-                      type="number"
-                      id={`token-${tokenName}`}
-                      className="token-custom-value"
-                      value={tokenValue}
-                      onChange={handleTokenChange(tokenName)}
-                      min="0.1"
-                      max="10"
-                      step="0.1"
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
