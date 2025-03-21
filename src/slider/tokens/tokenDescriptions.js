@@ -10,9 +10,9 @@ const tokenDescriptions = {
   "THUMB_TRANSITION_EASING": "Плавность перехода ползунка - характер движения при базовой анимации",
   "THUMB_HOVER_DURATION": "__HIDDEN__",
   "THUMB_DRAG_DURATION": "__HIDDEN__",
-  "THUMB_DRAG_EASING": "Плавность перетаскивания - характер движения при перетаскивании",
+  "THUMB_DRAG_EASING": "__HIDDEN__",
   "THUMB_DOT_EXPAND_DURATION": "Скорость увеличения и уменьшения точки",
-  "THUMB_DOT_COLLAPSE_DURATION": "Длительность уменьшения точки - время анимации уменьшения центральной точки",
+  "THUMB_DOT_COLLAPSE_DURATION": "__HIDDEN__",
   "THUMB_DOT_TRANSITION_EASING": "Плавность анимации точки - характер движения точки ползунка",
   
   // Токены оси (Axis)
@@ -23,7 +23,7 @@ const tokenDescriptions = {
   
   // Токены счетчика (Counter)
   "COUNTER_TRANSITION_DURATION": "__HIDDEN__",
-  "COUNTER_TRANSITION_EASING": "Плавность перехода счетчика - характер анимации изменения значения",
+  "COUNTER_TRANSITION_EASING": "__HIDDEN__",
   
   // Общие токены слайдера (Slider)
   "SLIDER_ANIMATION_DURATION": "__HIDDEN__",

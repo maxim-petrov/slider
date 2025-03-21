@@ -147,10 +147,9 @@ function App() {
 
   // Группируем токены по типам и сортируем их по названию компонента
   const groupedTokens = Object.entries(tokenValues).reduce((acc, [key, value]) => {
-    if (key.includes('DURATION')) {
-      acc.duration.push([key, value]);
-    } else if (key.includes('MOTION') || key.includes('EASING')) {
-      acc.motion.push([key, value]);
+    if (key.includes('DURATION') || key.includes('MOTION') || key.includes('EASING')) {
+      // Объединяем токены длительности и плавности в одну группу
+      acc.animation.push([key, value]);
     } else if (key.includes('SPRING')) {
       // Группируем spring токены по подтипам (STIFFNESS, DAMPING, MASS)
       if (key.includes('STIFFNESS')) {
@@ -163,8 +162,7 @@ function App() {
     }
     return acc;
   }, { 
-    duration: [], 
-    motion: [], 
+    animation: [], // Объединяем duration и motion в одну группу
     springStiffness: [],
     springDamping: [],
     springMass: []
@@ -197,8 +195,7 @@ function App() {
   };
 
   // Группируем токены по компонентам
-  const durationByComponent = groupTokensByComponent(groupedTokens.duration);
-  const motionByComponent = groupTokensByComponent(groupedTokens.motion);
+  const animationByComponent = groupTokensByComponent(groupedTokens.animation);
 
   // Функция для перевода названия компонента на русский
   const getComponentTranslation = (componentName) => {
@@ -211,6 +208,49 @@ function App() {
     return translations[componentName] || componentName;
   };
 
+  // Функция для сортировки токенов в правильном порядке
+  const sortTokensInPairs = (componentTokens) => {
+    // Создаем объект для хранения пар токенов
+    const tokenPairs = {};
+    
+    // Группируем токены по базовому имени (без DURATION/EASING)
+    componentTokens.forEach(token => {
+      const tokenName = token[0];
+      const baseName = tokenName.replace('_DURATION', '').replace('_EASING', '').replace('_MOTION', '');
+      
+      if (!tokenPairs[baseName]) {
+        tokenPairs[baseName] = [];
+      }
+      tokenPairs[baseName].push(token);
+    });
+    
+    // Сортируем токены в порядке DURATION, затем EASING для каждого базового имени
+    let result = [];
+    Object.entries(tokenPairs).forEach(([baseName, tokens]) => {
+      // Находим токен длительности
+      const durationToken = tokens.find(t => t[0].includes('DURATION'));
+      // Находим токен плавности
+      const easingToken = tokens.find(t => t[0].includes('EASING') || t[0].includes('MOTION'));
+      
+      // Сначала добавляем токен длительности, если он есть
+      if (durationToken) {
+        result.push(durationToken);
+      }
+      
+      // Затем добавляем токен плавности, если он есть
+      if (easingToken) {
+        result.push(easingToken);
+      }
+    });
+    
+    return result;
+  };
+  
+  // Применяем новый порядок сортировки к каждому компоненту
+  Object.keys(animationByComponent).forEach(componentName => {
+    animationByComponent[componentName] = sortTokensInPairs(animationByComponent[componentName]);
+  });
+
   return (
     <>
       <ErrorBoundary>
@@ -221,13 +261,18 @@ function App() {
         <h3>Настройка токенов анимации</h3>
         
         <div className="tokens-section">
-          <h4>Токены длительности</h4>
+          <h4>Токены анимации</h4>
           
-          {Object.entries(durationByComponent).map(([componentName, tokens]) => (
+          {Object.entries(animationByComponent).map(([componentName, tokens]) => (
             <div key={componentName} className={`component-group component-group-${componentName}`}>
               {tokens.map(([tokenName, tokenValue]) => {
                 const description = getTokenDescription(tokenName);
                 if (description === null) return null; // Пропускаем скрытые токены
+                
+                // Определяем, какие элементы управления отображать в зависимости от типа токена
+                const isEasing = tokenName.includes('EASING') || tokenName.includes('MOTION');
+                const isDuration = tokenName.includes('DURATION');
+                
                 return (
                   <div className="token-group" key={tokenName}>
                     <div className="token-description">
@@ -241,51 +286,12 @@ function App() {
                         onChange={handleTokenChange(tokenName)}
                       >
                         <optgroup label="Из tokens.json">
-                          {availableDurations.map(option => (
+                          {isEasing && availableMotions.map(option => (
                             <option key={option.value} value={option.value}>
                               {option.label}
                             </option>
                           ))}
-                        </optgroup>
-                      </select>
-                      
-                      <input
-                        type="text"
-                        className="token-custom-value"
-                        value={tokenValue}
-                        onChange={handleTokenChange(tokenName)}
-                        placeholder="Введите значение"
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-        
-        <div className="tokens-section">
-          <h4>Токены движения/плавности</h4>
-          
-          {Object.entries(motionByComponent).map(([componentName, tokens]) => (
-            <div key={componentName} className={`component-group component-group-${componentName}`}>
-              {tokens.map(([tokenName, tokenValue]) => {
-                const description = getTokenDescription(tokenName);
-                if (description === null) return null; // Пропускаем скрытые токены
-                return (
-                  <div className="token-group" key={tokenName}>
-                    <div className="token-description">
-                      <label htmlFor={`token-${tokenName}`}>{description}</label>
-                      <span className="token-technical-name">{tokenName}</span>
-                    </div>
-                    <div className="token-controls">
-                      <select 
-                        id={`token-${tokenName}`}
-                        value={tokenValue}
-                        onChange={handleTokenChange(tokenName)}
-                      >
-                        <optgroup label="Из tokens.json">
-                          {availableMotions.map(option => (
+                          {isDuration && availableDurations.map(option => (
                             <option key={option.value} value={option.value}>
                               {option.label}
                             </option>
