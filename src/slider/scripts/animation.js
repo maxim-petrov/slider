@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import tokens from '../tokens/tokenUtils.js';
+import tokens from '../tokens/utils/tokenUtils.js';
 
 // Функция для извлечения значения ms из строки, например "10000ms" -> 10000
 const extractMs = (duration) => {

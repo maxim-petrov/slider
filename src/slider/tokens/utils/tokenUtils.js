@@ -1,4 +1,4 @@
-import rootTokens from '../../tokens.json';
+import rootTokens from '../../../tokens.json';
 
 // Создаем функцию для корректной обработки любых пользовательских значений
 const parseTokenValue = (value) => {

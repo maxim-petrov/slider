@@ -104,7 +104,7 @@ function App() {
       // Также обновляем переменные в токенах для JS
       try {
         // Динамически импортируем tokenUtils для обновления значений на лету
-        import('./slider/tokens/tokenUtils').then(module => {
+        import('./slider/tokens/utils/tokenUtils').then(module => {
           if (module.default && typeof module.default.updateToken === 'function') {
             module.default.updateToken(key, value);
           }

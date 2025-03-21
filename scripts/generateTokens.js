@@ -5,8 +5,8 @@ import { fileURLToPath } from 'url';
 // Пути к файлам
 const COMPONENT_TOKENS_PATH = path.resolve('src/slider/tokens/tokens.json');
 const ROOT_TOKENS_PATH = path.resolve('src/tokens.json');
-const JS_UTILS_PATH = path.resolve('src/slider/tokens/tokenUtils.js');
-const SCSS_UTILS_PATH = path.resolve('src/slider/tokens/tokenUtils.scss');
+const JS_UTILS_PATH = path.resolve('src/slider/tokens/utils/tokenUtils.js');
+const SCSS_UTILS_PATH = path.resolve('src/slider/tokens/utils/tokenUtils.scss');
 
 // Функция для генерации файлов с токенами
 export async function generateTokenFiles() {
@@ -56,7 +56,7 @@ export async function generateTokenFiles() {
 
 // Генерация JS файла с токенами
 function generateJSTokens(processedTokens) {
-  const jsContent = `import rootTokens from '../../tokens.json';
+  const jsContent = `import rootTokens from '../../../tokens.json';
 
 // Создаем функцию для корректной обработки любых пользовательских значений
 const parseTokenValue = (value) => {
