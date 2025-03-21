@@ -134,7 +134,9 @@ function App() {
 
   // Функция для получения описания токена или использования технического названия если описание отсутствует
   const getTokenDescription = (tokenName) => {
-    return tokenDescriptions[tokenName] || tokenName;
+    const description = tokenDescriptions[tokenName];
+    if (description === '__HIDDEN__') return null;
+    return description || tokenName;
   };
 
   // Функция для получения названия компонента из токена
@@ -223,37 +225,41 @@ function App() {
           
           {Object.entries(durationByComponent).map(([componentName, tokens]) => (
             <div key={componentName} className={`component-group component-group-${componentName}`}>
-              {tokens.map(([tokenName, tokenValue]) => (
-                <div className="token-group" key={tokenName}>
-                  <div className="token-description">
-                    <label htmlFor={`token-${tokenName}`}>{getTokenDescription(tokenName)}</label>
-                    <span className="token-technical-name">{tokenName}</span>
+              {tokens.map(([tokenName, tokenValue]) => {
+                const description = getTokenDescription(tokenName);
+                if (description === null) return null; // Пропускаем скрытые токены
+                return (
+                  <div className="token-group" key={tokenName}>
+                    <div className="token-description">
+                      <label htmlFor={`token-${tokenName}`}>{description}</label>
+                      <span className="token-technical-name">{tokenName}</span>
+                    </div>
+                    <div className="token-controls">
+                      <select 
+                        id={`token-${tokenName}`}
+                        value={tokenValue}
+                        onChange={handleTokenChange(tokenName)}
+                      >
+                        <optgroup label="Из tokens.json">
+                          {availableDurations.map(option => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </optgroup>
+                      </select>
+                      
+                      <input
+                        type="text"
+                        className="token-custom-value"
+                        value={tokenValue}
+                        onChange={handleTokenChange(tokenName)}
+                        placeholder="Введите значение"
+                      />
+                    </div>
                   </div>
-                  <div className="token-controls">
-                    <select 
-                      id={`token-${tokenName}`}
-                      value={tokenValue}
-                      onChange={handleTokenChange(tokenName)}
-                    >
-                      <optgroup label="Из tokens.json">
-                        {availableDurations.map(option => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </optgroup>
-                    </select>
-                    
-                    <input
-                      type="text"
-                      className="token-custom-value"
-                      value={tokenValue}
-                      onChange={handleTokenChange(tokenName)}
-                      placeholder="Введите значение"
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ))}
         </div>
@@ -263,37 +269,41 @@ function App() {
           
           {Object.entries(motionByComponent).map(([componentName, tokens]) => (
             <div key={componentName} className={`component-group component-group-${componentName}`}>
-              {tokens.map(([tokenName, tokenValue]) => (
-                <div className="token-group" key={tokenName}>
-                  <div className="token-description">
-                    <label htmlFor={`token-${tokenName}`}>{getTokenDescription(tokenName)}</label>
-                    <span className="token-technical-name">{tokenName}</span>
+              {tokens.map(([tokenName, tokenValue]) => {
+                const description = getTokenDescription(tokenName);
+                if (description === null) return null; // Пропускаем скрытые токены
+                return (
+                  <div className="token-group" key={tokenName}>
+                    <div className="token-description">
+                      <label htmlFor={`token-${tokenName}`}>{description}</label>
+                      <span className="token-technical-name">{tokenName}</span>
+                    </div>
+                    <div className="token-controls">
+                      <select 
+                        id={`token-${tokenName}`}
+                        value={tokenValue}
+                        onChange={handleTokenChange(tokenName)}
+                      >
+                        <optgroup label="Из tokens.json">
+                          {availableMotions.map(option => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </optgroup>
+                      </select>
+                      
+                      <input
+                        type="text"
+                        className="token-custom-value"
+                        value={tokenValue}
+                        onChange={handleTokenChange(tokenName)}
+                        placeholder="Введите значение"
+                      />
+                    </div>
                   </div>
-                  <div className="token-controls">
-                    <select 
-                      id={`token-${tokenName}`}
-                      value={tokenValue}
-                      onChange={handleTokenChange(tokenName)}
-                    >
-                      <optgroup label="Из tokens.json">
-                        {availableMotions.map(option => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </optgroup>
-                    </select>
-                    
-                    <input
-                      type="text"
-                      className="token-custom-value"
-                      value={tokenValue}
-                      onChange={handleTokenChange(tokenName)}
-                      placeholder="Введите значение"
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ))}
         </div>
@@ -308,72 +318,84 @@ function App() {
             {/* Stiffness tokens */}
             {groupedTokens.springStiffness.length > 0 && (
               <div className="spring-token-group">
-                {groupedTokens.springStiffness.map(([tokenName, tokenValue]) => (
-                  <div className="token-group" key={tokenName}>
-                    <div className="token-description">
-                      <label htmlFor={`token-${tokenName}`}>{getTokenDescription(tokenName)}</label>
-                      <span className="token-technical-name">{tokenName}</span>
+                {groupedTokens.springStiffness.map(([tokenName, tokenValue]) => {
+                  const description = getTokenDescription(tokenName);
+                  if (description === null) return null; // Пропускаем скрытые токены
+                  return (
+                    <div className="token-group" key={tokenName}>
+                      <div className="token-description">
+                        <label htmlFor={`token-${tokenName}`}>{description}</label>
+                        <span className="token-technical-name">{tokenName}</span>
+                      </div>
+                      <input
+                        type="number"
+                        id={`token-${tokenName}`}
+                        className="token-custom-value"
+                        value={tokenValue}
+                        onChange={handleTokenChange(tokenName)}
+                        min="1"
+                        max="1000"
+                        step="10"
+                      />
                     </div>
-                    <input
-                      type="number"
-                      id={`token-${tokenName}`}
-                      className="token-custom-value"
-                      value={tokenValue}
-                      onChange={handleTokenChange(tokenName)}
-                      min="1"
-                      max="1000"
-                      step="10"
-                    />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
             
             {/* Damping tokens */}
             {groupedTokens.springDamping.length > 0 && (
               <div className="spring-token-group">
-                {groupedTokens.springDamping.map(([tokenName, tokenValue]) => (
-                  <div className="token-group" key={tokenName}>
-                    <div className="token-description">
-                      <label htmlFor={`token-${tokenName}`}>{getTokenDescription(tokenName)}</label>
-                      <span className="token-technical-name">{tokenName}</span>
+                {groupedTokens.springDamping.map(([tokenName, tokenValue]) => {
+                  const description = getTokenDescription(tokenName);
+                  if (description === null) return null; // Пропускаем скрытые токены
+                  return (
+                    <div className="token-group" key={tokenName}>
+                      <div className="token-description">
+                        <label htmlFor={`token-${tokenName}`}>{description}</label>
+                        <span className="token-technical-name">{tokenName}</span>
+                      </div>
+                      <input
+                        type="number"
+                        id={`token-${tokenName}`}
+                        className="token-custom-value"
+                        value={tokenValue}
+                        onChange={handleTokenChange(tokenName)}
+                        min="0"
+                        max="100"
+                        step="1"
+                      />
                     </div>
-                    <input
-                      type="number"
-                      id={`token-${tokenName}`}
-                      className="token-custom-value"
-                      value={tokenValue}
-                      onChange={handleTokenChange(tokenName)}
-                      min="0"
-                      max="100"
-                      step="1"
-                    />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
             
             {/* Mass tokens */}
             {groupedTokens.springMass.length > 0 && (
               <div className="spring-token-group">
-                {groupedTokens.springMass.map(([tokenName, tokenValue]) => (
-                  <div className="token-group" key={tokenName}>
-                    <div className="token-description">
-                      <label htmlFor={`token-${tokenName}`}>{getTokenDescription(tokenName)}</label>
-                      <span className="token-technical-name">{tokenName}</span>
+                {groupedTokens.springMass.map(([tokenName, tokenValue]) => {
+                  const description = getTokenDescription(tokenName);
+                  if (description === null) return null; // Пропускаем скрытые токены
+                  return (
+                    <div className="token-group" key={tokenName}>
+                      <div className="token-description">
+                        <label htmlFor={`token-${tokenName}`}>{description}</label>
+                        <span className="token-technical-name">{tokenName}</span>
+                      </div>
+                      <input
+                        type="number"
+                        id={`token-${tokenName}`}
+                        className="token-custom-value"
+                        value={tokenValue}
+                        onChange={handleTokenChange(tokenName)}
+                        min="0.1"
+                        max="10"
+                        step="0.1"
+                      />
                     </div>
-                    <input
-                      type="number"
-                      id={`token-${tokenName}`}
-                      className="token-custom-value"
-                      value={tokenValue}
-                      onChange={handleTokenChange(tokenName)}
-                      min="0.1"
-                      max="10"
-                      step="0.1"
-                    />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
