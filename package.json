@@ -8,7 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-tokens": "node scripts/generateTokens.js"
+    "generate-tokens": "node scripts/generateTokens.js",
+    "postinstall": "npx json -f package-lock.json -e 'delete this.packages[\"node_modules/sass-embedded\"]' -I",
+    "prepare-stackblitz": "rm -rf node_modules package-lock.json && npm install && npm uninstall sass-embedded --save-dev && npx json -f package-lock.json -e 'delete this.packages[\"node_modules/sass-embedded\"]' -I"
   },
   "dependencies": {
     "framer-motion": "^12.5.0",
@@ -24,6 +26,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "json": "^11.0.0",
     "sass": "^1.86.0",
     "vite": "^6.2.2"
   }
