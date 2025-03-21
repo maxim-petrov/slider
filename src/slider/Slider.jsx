@@ -5,7 +5,7 @@ import {
   getSliderTransitionStyle,
   getInputDraggingStyle,
   SLIDER_ANIMATION,
-} from './animation.js';
+} from './scripts/animation.js';
 import '../index.css';
 import './styles/slider.scss';
 import './styles/animation.scss';
